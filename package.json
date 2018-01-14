@@ -1,0 +1,38 @@
+{
+  "name": "syntax-server",
+  "version": "0.0.1",
+  "description": "A server for my syntax blog",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "babel -w server.js --out-file server.dist.js",
+    "build": "babel -d dist/ src/",
+    "start": "node dist/server.js",
+    "build-start": "babel -d dist/ src/ & node dist/server.js"
+  },
+  "keywords": [
+    "server",
+    "graphql"
+  ],
+  "author": "Sunil Hari",
+  "license": "MIT",
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-plugin-syntax-async-functions": "^6.13.0",
+    "babel-plugin-transform-regenerator": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "graphql": "^0.12.3",
+    "graphql-server-express": "^1.3.2",
+    "graphql-tools": "^2.18.0",
+    "mongodb": "^3.0.1"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "nodemon": "^1.14.11"
+  }
+}
