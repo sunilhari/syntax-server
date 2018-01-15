@@ -38,11 +38,13 @@ require('dotenv').config();
 var DB_HOST = process.env.DB_HOST,
     DB_USER = process.env.DB_USER,
     DB_PASS = process.env.DB_PASS,
-    DB_MONGO_URL = process.env.DB_MONGO_URL;
+    DB_MONGO_URL = process.env.DB_MONGO_URL,
+    SERVER_PORT = process.env.SERVER_PORT,
+    SERVER_HOST = process.env.SERVER_HOST;
 
 var start = exports.start = function () {
     var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
-        var Articles, db, typeDefs, resolvers, schema, app, PORT;
+        var Articles, db, prepare, typeDefs, resolvers, schema, app;
         return _regenerator2.default.wrap(function _callee2$(_context2) {
             while (1) {
                 switch (_context2.prev = _context2.next) {
@@ -56,6 +58,12 @@ var start = exports.start = function () {
 
                     case 4:
                         db = _context2.sent;
+
+                        prepare = function prepare(o) {
+                            o._id = o._id.toString();
+                            return o;
+                        };
+
                         typeDefs = ['\n            type Article{\n                _id:String,\n                title:String,\n                content:String\n            }\n            type Query{\n                articles:[Article]\n            }\n\n            schema {\n                query:Query\n            }\n        '];
                         resolvers = {
                             Query: {
@@ -69,9 +77,10 @@ var start = exports.start = function () {
                                                         return Articles.find({}).toArray();
 
                                                     case 2:
-                                                        return _context.abrupt('return', _context.sent);
+                                                        _context.t0 = prepare;
+                                                        return _context.abrupt('return', _context.sent.map(_context.t0));
 
-                                                    case 3:
+                                                    case 4:
                                                     case 'end':
                                                         return _context.stop();
                                                 }
@@ -89,32 +98,37 @@ var start = exports.start = function () {
                             typeDefs: typeDefs,
                             resolvers: resolvers
                         });
-                        app = (0, _express2.default)(), PORT = 3001;
+                        app = (0, _express2.default)();
 
-                        app.use('/query', _bodyParser2.default.json(), (0, _graphqlServerExpress.graphqlExpress)({ schema: schema }));
+                        app.use((0, _cors2.default)());
+                        app.use('/api', _bodyParser2.default.json(), (0, _graphqlServerExpress.graphqlExpress)({ schema: schema }));
 
                         app.use('/graphiql', (0, _graphqlServerExpress.graphiqlExpress)({
-                            endpointURL: '/query'
+                            endpointURL: '/api'
                         }));
-
-                        app.listen(PORT, function () {
-                            console.log('Visit http://localhost:' + PORT);
+                        /*
+                        app.use('/medium', bodyParser.json(), async()=>{
+                            
                         });
-                        _context2.next = 17;
+                        */
+                        app.listen(SERVER_PORT, function () {
+                            console.log('Running @ ' + SERVER_HOST + ':' + SERVER_PORT);
+                        });
+                        _context2.next = 19;
                         break;
 
-                    case 14:
-                        _context2.prev = 14;
+                    case 16:
+                        _context2.prev = 16;
                         _context2.t0 = _context2['catch'](0);
 
                         console.log(_context2.t0);
 
-                    case 17:
+                    case 19:
                     case 'end':
                         return _context2.stop();
                 }
             }
-        }, _callee2, undefined, [[0, 14]]);
+        }, _callee2, undefined, [[0, 16]]);
     }));
 
     return function start() {

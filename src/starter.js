@@ -20,6 +20,10 @@ export const start = async() => {
         const db = await MongoClient.connect(DB_MONGO_URL, (error, database) => {
             Articles = database.db('syntax').collection('articles');
         });
+        const prepare = (o) => {
+            o._id = o._id.toString()
+            return o
+        };
         const typeDefs = [`
             type Article{
                 _id:String,
@@ -37,7 +41,7 @@ export const start = async() => {
         const resolvers = {
             Query: {
                 articles: async() => {
-                    return (await Articles.find({}).toArray());
+                    return (await Articles.find({}).toArray()).map(prepare);
                 }
             }
         };
@@ -46,14 +50,19 @@ export const start = async() => {
             resolvers
         });
         const app = express();
-        app.use('/query', bodyParser.json(), graphqlExpress({ schema }))
+        app.use(cors());
+        app.use('/api', bodyParser.json(), graphqlExpress({ schema }));
 
         app.use('/graphiql', graphiqlExpress({
-            endpointURL: '/query'
+            endpointURL: '/api'
         }));
-
+        /*
+        app.use('/medium', bodyParser.json(), async()=>{
+            
+        });
+        */
         app.listen(SERVER_PORT, () => {
-            console.log(`Visit${SERVER_HOST}:${SERVER_PORT}`)
+            console.log(`Running @ ${SERVER_HOST}:${SERVER_PORT}`)
         })
     } catch (e) {
         console.log(e);
