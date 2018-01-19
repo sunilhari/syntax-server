@@ -31,6 +31,10 @@ var _cors = require('cors');
 
 var _cors2 = _interopRequireDefault(_cors);
 
+var _axios = require('axios');
+
+var _axios2 = _interopRequireDefault(_axios);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 require('dotenv').config();
@@ -101,34 +105,46 @@ var start = exports.start = function () {
                         app = (0, _express2.default)();
 
                         app.use((0, _cors2.default)());
-                        app.use('/api', _bodyParser2.default.json(), (0, _graphqlServerExpress.graphqlExpress)({ schema: schema }));
+                        app.use('/api', _bodyParser2.default.json(), (0, _graphqlServerExpress.graphqlExpress)({
+                            schema: schema
+                        }));
 
                         app.use('/graphiql', (0, _graphqlServerExpress.graphiqlExpress)({
                             endpointURL: '/api'
                         }));
-                        /*
-                        app.use('/medium', bodyParser.json(), async()=>{
-                            
+                        app.use('/medium', function (parentRequest, parentResponse) {
+                            var configJson = {
+                                url: process.env.MEDIUM_URL,
+                                method: 'get',
+                                headers: {
+                                    'Authorization': 'Bearer ' + process.env.MEDIUM_ACCESS_TOKEN
+                                }
+                            };
+                            parentResponse.send({ message: "API is no Longer Active" });
+                            (0, _axios2.default)(configJson).then(function (response) {
+                                parentResponse.send({ status: 'success', data: response.data.data });
+                            }).catch(function (error) {
+                                parentResponse.send({ status: 'error', data: [] });
+                            });
                         });
-                        */
                         app.listen(SERVER_PORT, function () {
                             console.log('Running @ ' + SERVER_HOST + ':' + SERVER_PORT);
                         });
-                        _context2.next = 19;
+                        _context2.next = 20;
                         break;
 
-                    case 16:
-                        _context2.prev = 16;
+                    case 17:
+                        _context2.prev = 17;
                         _context2.t0 = _context2['catch'](0);
 
                         console.log(_context2.t0);
 
-                    case 19:
+                    case 20:
                     case 'end':
                         return _context2.stop();
                 }
             }
-        }, _callee2, undefined, [[0, 16]]);
+        }, _callee2, undefined, [[0, 17]]);
     }));
 
     return function start() {

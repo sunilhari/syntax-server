@@ -1,9 +1,18 @@
-import { MongoClient, ObjectId } from 'mongodb'
+import {
+    MongoClient,
+    ObjectId
+} from 'mongodb'
 import express from 'express'
 import bodyParser from 'body-parser'
-import { graphqlExpress, graphiqlExpress } from 'graphql-server-express'
-import { makeExecutableSchema } from 'graphql-tools'
-import cors from 'cors'
+import {
+    graphqlExpress,
+    graphiqlExpress
+} from 'graphql-server-express'
+import {
+    makeExecutableSchema
+} from 'graphql-tools'
+import cors from 'cors';
+import axios from 'axios';
 require('dotenv').config();
 
 const DB_HOST = process.env.DB_HOST,
@@ -51,16 +60,30 @@ export const start = async() => {
         });
         const app = express();
         app.use(cors());
-        app.use('/api', bodyParser.json(), graphqlExpress({ schema }));
+        app.use('/api', bodyParser.json(), graphqlExpress({
+            schema
+        }));
 
         app.use('/graphiql', graphiqlExpress({
             endpointURL: '/api'
         }));
-        /*
-        app.use('/medium', bodyParser.json(), async()=>{
-            
+        app.use('/medium', (parentRequest, parentResponse) => {
+            let configJson = {
+                url: process.env.MEDIUM_URL,
+                method: 'get',
+                headers: {
+                    'Authorization': 'Bearer ' + process.env.MEDIUM_ACCESS_TOKEN
+                }
+            };
+            parentResponse.send({message:"API is no Longer Active"});
+            axios(configJson)
+                .then(response => {
+                    parentResponse.send({status:'success',data:response.data.data});
+                })
+                .catch(error => {
+                    parentResponse.send({status:'error',data:[]});
+                });
         });
-        */
         app.listen(SERVER_PORT, () => {
             console.log(`Running @ ${SERVER_HOST}:${SERVER_PORT}`)
         })
