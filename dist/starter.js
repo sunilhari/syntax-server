@@ -47,28 +47,28 @@ var DB_HOST = process.env.DB_HOST,
     SERVER_HOST = process.env.SERVER_HOST;
 
 var start = exports.start = function () {
-    var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
+    var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
         var Articles, db, prepare, typeDefs, resolvers, schema, app;
-        return _regenerator2.default.wrap(function _callee2$(_context2) {
+        return _regenerator2.default.wrap(function _callee3$(_context3) {
             while (1) {
-                switch (_context2.prev = _context2.next) {
+                switch (_context3.prev = _context3.next) {
                     case 0:
-                        _context2.prev = 0;
+                        _context3.prev = 0;
                         Articles = void 0;
-                        _context2.next = 4;
+                        _context3.next = 4;
                         return _mongodb.MongoClient.connect(DB_MONGO_URL, function (error, database) {
                             Articles = database.db('syntax').collection('articles');
                         });
 
                     case 4:
-                        db = _context2.sent;
+                        db = _context3.sent;
 
                         prepare = function prepare(o) {
                             o._id = o._id.toString();
                             return o;
                         };
 
-                        typeDefs = ['\n            type Article{\n                _id:String,\n                title:String,\n                content:String\n            }\n            type Query{\n                articles:[Article]\n            }\n\n            schema {\n                query:Query\n            }\n        '];
+                        typeDefs = ['\n            type Article{\n                _id:String,\n                title:String,\n                content:String,\n                creationdate:String\n            }\n            type Query{\n                articles:[Article]\n            }\n            type Mutation {\n                createArticle(title: String, content: String,tags:String): Article\n            }\n            schema {\n                query:Query,\n                mutation:Mutation\n            }\n        '];
                         resolvers = {
                             Query: {
                                 articles: function () {
@@ -96,6 +96,45 @@ var start = exports.start = function () {
                                         return _ref2.apply(this, arguments);
                                     };
                                 }()
+                            },
+                            Mutation: {
+                                createArticle: function () {
+                                    var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(root, args, context, info) {
+                                        var res;
+                                        return _regenerator2.default.wrap(function _callee2$(_context2) {
+                                            while (1) {
+                                                switch (_context2.prev = _context2.next) {
+                                                    case 0:
+                                                        args.creationdate = new Date().getTime(); //inserting date
+                                                        _context2.next = 3;
+                                                        return Articles.insert(args);
+
+                                                    case 3:
+                                                        res = _context2.sent;
+
+                                                        console.log(res);
+                                                        _context2.t0 = prepare;
+                                                        _context2.next = 8;
+                                                        return Articles.findOne({
+                                                            _id: res.insertedIds[0]
+                                                        });
+
+                                                    case 8:
+                                                        _context2.t1 = _context2.sent;
+                                                        return _context2.abrupt('return', (0, _context2.t0)(_context2.t1));
+
+                                                    case 10:
+                                                    case 'end':
+                                                        return _context2.stop();
+                                                }
+                                            }
+                                        }, _callee2, undefined);
+                                    }));
+
+                                    return function createArticle(_x, _x2, _x3, _x4) {
+                                        return _ref3.apply(this, arguments);
+                                    };
+                                }()
                             }
                         };
                         schema = (0, _graphqlTools.makeExecutableSchema)({
@@ -105,6 +144,7 @@ var start = exports.start = function () {
                         app = (0, _express2.default)();
 
                         app.use((0, _cors2.default)());
+                        app.use(_bodyParser2.default.text({ type: 'application/graphql' }));
                         app.use('/api', _bodyParser2.default.json(), (0, _graphqlServerExpress.graphqlExpress)({
                             schema: schema
                         }));
@@ -120,31 +160,39 @@ var start = exports.start = function () {
                                     'Authorization': 'Bearer ' + process.env.MEDIUM_ACCESS_TOKEN
                                 }
                             };
-                            parentResponse.send({ message: "API is no Longer Active" });
+                            parentResponse.send({
+                                message: "API is no Longer Active"
+                            });
                             (0, _axios2.default)(configJson).then(function (response) {
-                                parentResponse.send({ status: 'success', data: response.data.data });
+                                parentResponse.send({
+                                    status: 'success',
+                                    data: response.data.data
+                                });
                             }).catch(function (error) {
-                                parentResponse.send({ status: 'error', data: [] });
+                                parentResponse.send({
+                                    status: 'error',
+                                    data: []
+                                });
                             });
                         });
                         app.listen(SERVER_PORT, function () {
                             console.log('Running @ ' + SERVER_HOST + ':' + SERVER_PORT);
                         });
-                        _context2.next = 20;
+                        _context3.next = 21;
                         break;
 
-                    case 17:
-                        _context2.prev = 17;
-                        _context2.t0 = _context2['catch'](0);
+                    case 18:
+                        _context3.prev = 18;
+                        _context3.t0 = _context3['catch'](0);
 
-                        console.log(_context2.t0);
+                        console.log(_context3.t0);
 
-                    case 20:
+                    case 21:
                     case 'end':
-                        return _context2.stop();
+                        return _context3.stop();
                 }
             }
-        }, _callee2, undefined, [[0, 17]]);
+        }, _callee3, undefined, [[0, 18]]);
     }));
 
     return function start() {

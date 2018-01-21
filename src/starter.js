@@ -37,20 +37,34 @@ export const start = async() => {
             type Article{
                 _id:String,
                 title:String,
-                content:String
+                content:String,
+                tags:String,
+                creationdate:String
             }
             type Query{
                 articles:[Article]
             }
-
+            type Mutation {
+                createArticle(title: String, content: String,tags:String): Article
+            }
             schema {
-                query:Query
+                query:Query,
+                mutation:Mutation
             }
         `];
         const resolvers = {
             Query: {
                 articles: async() => {
                     return (await Articles.find({}).toArray()).map(prepare);
+                }
+            },
+            Mutation: {
+                createArticle: async(root, args, context, info) => {
+                    args.creationdate = new Date().getTime();//inserting date
+                    const res = await Articles.insert(args);
+                    return prepare(await Articles.findOne({
+                        _id: res.insertedIds[0]
+                    }))
                 }
             }
         };
@@ -60,6 +74,7 @@ export const start = async() => {
         });
         const app = express();
         app.use(cors());
+        app.use(bodyParser.text({ type: 'application/graphql' }));
         app.use('/api', bodyParser.json(), graphqlExpress({
             schema
         }));
@@ -75,13 +90,21 @@ export const start = async() => {
                     'Authorization': 'Bearer ' + process.env.MEDIUM_ACCESS_TOKEN
                 }
             };
-            parentResponse.send({message:"API is no Longer Active"});
+            parentResponse.send({
+                message: "API is no Longer Active"
+            });
             axios(configJson)
                 .then(response => {
-                    parentResponse.send({status:'success',data:response.data.data});
+                    parentResponse.send({
+                        status: 'success',
+                        data: response.data.data
+                    });
                 })
                 .catch(error => {
-                    parentResponse.send({status:'error',data:[]});
+                    parentResponse.send({
+                        status: 'error',
+                        data: []
+                    });
                 });
         });
         app.listen(SERVER_PORT, () => {
