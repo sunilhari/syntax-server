@@ -27,6 +27,7 @@ export const start = async() => {
     try {
         let Articles;
         const db = await MongoClient.connect(DB_MONGO_URL, (error, database) => {
+            console.log('Connected to DB');
             Articles = database.db('syntax').collection('articles');
         });
         const prepare = (o) => {
