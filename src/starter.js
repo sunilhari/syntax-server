@@ -26,7 +26,6 @@ export const start = async() => {
 
     try {
         let Articles;
-        console.log(DB_MONGO_URL);
         const db = await MongoClient.connect(DB_MONGO_URL, (error, database) => {
             Articles = database.db('syntax').collection('articles');
         });
@@ -109,7 +108,7 @@ export const start = async() => {
                 });
         });
         app.listen(SERVER_PORT, () => {
-            console.log(`Running @ ${SERVER_HOST}:${SERVER_PORT}`)
+            console.log(`Running @ ${SERVER_HOST}`)
         })
     } catch (e) {
         console.log(e);
