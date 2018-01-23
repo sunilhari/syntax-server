@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "babel -w server.js --out-file server.dist.js",
     "build": "babel -d dist/ src/",
-    "start": "node dist/server.js",
+    "start": "babel -d dist/ src/ & node dist/server.js",
     "build-start": "babel -d dist/ src/ & node dist/server.js",
     "build-watch": "babel -d dist/ src/ & node dist/server.js & node dist/server.js & babel -w src/ --out-dir dist/"
   },

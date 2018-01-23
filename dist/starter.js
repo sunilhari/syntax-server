@@ -68,7 +68,7 @@ var start = exports.start = function () {
                             return o;
                         };
 
-                        typeDefs = ['\n            type Article{\n                _id:String,\n                title:String,\n                content:String,\n                creationdate:String\n            }\n            type Query{\n                articles:[Article]\n            }\n            type Mutation {\n                createArticle(title: String, content: String,tags:String): Article\n            }\n            schema {\n                query:Query,\n                mutation:Mutation\n            }\n        '];
+                        typeDefs = ['\n            type Article{\n                _id:String,\n                title:String,\n                content:String,\n                tags:String,\n                creationdate:String\n            }\n            type Query{\n                articles:[Article]\n            }\n            type Mutation {\n                createArticle(title: String, content: String,tags:String): Article\n            }\n            schema {\n                query:Query,\n                mutation:Mutation\n            }\n        '];
                         resolvers = {
                             Query: {
                                 articles: function () {
@@ -111,19 +111,17 @@ var start = exports.start = function () {
 
                                                     case 3:
                                                         res = _context2.sent;
-
-                                                        console.log(res);
                                                         _context2.t0 = prepare;
-                                                        _context2.next = 8;
+                                                        _context2.next = 7;
                                                         return Articles.findOne({
                                                             _id: res.insertedIds[0]
                                                         });
 
-                                                    case 8:
+                                                    case 7:
                                                         _context2.t1 = _context2.sent;
                                                         return _context2.abrupt('return', (0, _context2.t0)(_context2.t1));
 
-                                                    case 10:
+                                                    case 9:
                                                     case 'end':
                                                         return _context2.stop();
                                                 }
