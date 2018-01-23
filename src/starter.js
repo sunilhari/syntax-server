@@ -16,11 +16,8 @@ import axios from 'axios';
 require('dotenv').config();
 
 const DB_HOST = process.env.DB_HOST,
-    DB_USER = process.env.DB_USER,
-    DB_PASS = process.env.DB_PASS,
     DB_MONGO_URL = process.env.MONGODB_URI,
-    SERVER_PORT = process.env.PORT ||process.env.SERVER_PORT,
-    SERVER_HOST = process.env.SERVER_HOST;
+    SERVER_PORT = process.env.PORT ||process.env.SERVER_PORT;
 
 export const start = async() => {
 
@@ -109,7 +106,7 @@ export const start = async() => {
                 });
         });
         app.listen(SERVER_PORT, () => {
-            console.log(`Running @ ${SERVER_HOST}`)
+            console.log(`Server running on ${SERVER_PORT}`)
         })
     } catch (e) {
         console.log(e);
