@@ -19,7 +19,7 @@ const DB_HOST = process.env.DB_HOST,
     DB_USER = process.env.DB_USER,
     DB_PASS = process.env.DB_PASS,
     DB_MONGO_URL = process.env.MONGODB_URI,
-    SERVER_PORT = process.env.SERVER_PORT,
+    SERVER_PORT = process.env.PORT ||process.env.SERVER_PORT,
     SERVER_HOST = process.env.SERVER_HOST;
 
 export const start = async() => {
