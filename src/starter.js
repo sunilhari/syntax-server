@@ -26,6 +26,7 @@ export const start = async() => {
 
     try {
         let Articles;
+        console.log(DB_MONGO_URL);
         const db = await MongoClient.connect(DB_MONGO_URL, (error, database) => {
             Articles = database.db('syntax').collection('articles');
         });

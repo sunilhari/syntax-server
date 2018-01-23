@@ -42,7 +42,7 @@ require('dotenv').config();
 var DB_HOST = process.env.DB_HOST,
     DB_USER = process.env.DB_USER,
     DB_PASS = process.env.DB_PASS,
-    DB_MONGO_URL = process.env.DB_MONGO_URL,
+    DB_MONGO_URL = process.env.MONGODB_URI,
     SERVER_PORT = process.env.SERVER_PORT,
     SERVER_HOST = process.env.SERVER_HOST;
 
@@ -55,12 +55,14 @@ var start = exports.start = function () {
                     case 0:
                         _context3.prev = 0;
                         Articles = void 0;
-                        _context3.next = 4;
+
+                        console.log(DB_MONGO_URL);
+                        _context3.next = 5;
                         return _mongodb.MongoClient.connect(DB_MONGO_URL, function (error, database) {
                             Articles = database.db('syntax').collection('articles');
                         });
 
-                    case 4:
+                    case 5:
                         db = _context3.sent;
 
                         prepare = function prepare(o) {
@@ -176,21 +178,21 @@ var start = exports.start = function () {
                         app.listen(SERVER_PORT, function () {
                             console.log('Running @ ' + SERVER_HOST + ':' + SERVER_PORT);
                         });
-                        _context3.next = 21;
+                        _context3.next = 22;
                         break;
 
-                    case 18:
-                        _context3.prev = 18;
+                    case 19:
+                        _context3.prev = 19;
                         _context3.t0 = _context3['catch'](0);
 
                         console.log(_context3.t0);
 
-                    case 21:
+                    case 22:
                     case 'end':
                         return _context3.stop();
                 }
             }
-        }, _callee3, undefined, [[0, 18]]);
+        }, _callee3, undefined, [[0, 19]]);
     }));
 
     return function start() {
