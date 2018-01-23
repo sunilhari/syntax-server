@@ -40,11 +40,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 require('dotenv').config();
 
 var DB_HOST = process.env.DB_HOST,
-    DB_USER = process.env.DB_USER,
-    DB_PASS = process.env.DB_PASS,
     DB_MONGO_URL = process.env.MONGODB_URI,
-    SERVER_PORT = process.env.SERVER_PORT,
-    SERVER_HOST = process.env.SERVER_HOST;
+    SERVER_PORT = process.env.PORT || process.env.SERVER_PORT;
 
 var start = exports.start = function () {
     var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
@@ -55,14 +52,13 @@ var start = exports.start = function () {
                     case 0:
                         _context3.prev = 0;
                         Articles = void 0;
-
-                        console.log(DB_MONGO_URL);
-                        _context3.next = 5;
+                        _context3.next = 4;
                         return _mongodb.MongoClient.connect(DB_MONGO_URL, function (error, database) {
+                            console.log('Connected to DB');
                             Articles = database.db('syntax').collection('articles');
                         });
 
-                    case 5:
+                    case 4:
                         db = _context3.sent;
 
                         prepare = function prepare(o) {
@@ -176,23 +172,23 @@ var start = exports.start = function () {
                             });
                         });
                         app.listen(SERVER_PORT, function () {
-                            console.log('Running @ ' + SERVER_HOST + ':' + SERVER_PORT);
+                            console.log('Server running on ' + SERVER_PORT);
                         });
-                        _context3.next = 22;
+                        _context3.next = 21;
                         break;
 
-                    case 19:
-                        _context3.prev = 19;
+                    case 18:
+                        _context3.prev = 18;
                         _context3.t0 = _context3['catch'](0);
 
                         console.log(_context3.t0);
 
-                    case 22:
+                    case 21:
                     case 'end':
                         return _context3.stop();
                 }
             }
-        }, _callee3, undefined, [[0, 19]]);
+        }, _callee3, undefined, [[0, 18]]);
     }));
 
     return function start() {
